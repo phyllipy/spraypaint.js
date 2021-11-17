@@ -40,7 +40,11 @@ const maybeEncode = (value: string): string => {
     typeof window !== "undefined" &&
     typeof window.navigator.userAgent !== "undefined"
   const isIE = isBrowser && window.navigator.userAgent.match(/(MSIE|Trident)/)
-  const isEncoded = typeof value === "string" && value.indexOf("%") !== -1
+  const isEncoded = (
+    typeof value === "string" && 
+    value.search(/[^A-Za-z0-9-_.!~*'()%\s]/) === -1 && 
+    value.search(/%[0-9A-Fa-f]{2}/) !== -1
+  )
   const shouldEncode = isBrowser && isIE && !isEncoded
   return shouldEncode ? encodeURIComponent(value) : value
 }
